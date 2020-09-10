@@ -1,0 +1,9 @@
+Durante el segundo episodio de Quantum Lab exploramos las distintas puertas cuánticas que ofrece IBM quantum experience: puertas claśicas, puertas de fase y puertas no unitarias.
+Probando la puerta no unitaria reset, nos dimos cuenta que además de resetear el esado del qubit a 0, le asigna una fase aleatoria, ay sea 0 o pi. 
+No sabemos si esto es un bug o una propiedad, ya que la documentación no lo aclará (https://quantum-computing.ibm.com/docs/iqx/operations-glossary#reset-operation).
+Durante esta semana investigaremos el asunto y lo resolveremos durante el próximo directo.
+
+Ver glosario para más info: https://quantum-computing.ibm.com/docs/iqx/operations-glossary
+
+Directo en Twitch: https://www.twitch.tv/videos/736158568
+Directo resubido a Youtube: https://youtu.be/AHyO9zHu6Oo 
