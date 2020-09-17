@@ -1,0 +1,36 @@
+Durante el tercer episodio de Quantum Lab seguimos exploramos las distintas puertas cuánticas que ofrece IBM quantum experience: RX, RY, U3, etc. 
+Además construimos las puertas clásicas AND, OR and XOR usando puertas cuánticas. Todas las implementaciones usan 3 qubits, 2 cubits sobre los que operar y uno de control.
+¿Se pueden implementar usando 2 qubits tan solo, haciendo que el segundo qubit sea el control?
+
+Soluciones
+
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from numpy import pi
+#AND
+qreg_q = QuantumRegister(3, 'q')
+creg_c = ClassicalRegister(3, 'c')
+circuit = QuantumCircuit(qreg_q, creg_c)
+
+circuit.ccx(qreg_q[0], qreg_q[1], qreg_q[2])
+
+#OR
+qreg_q = QuantumRegister(3, 'q')
+creg_c = ClassicalRegister(3, 'c')
+circuit = QuantumCircuit(qreg_q, creg_c)
+
+circuit.cx(qreg_q[1], qreg_q[2])
+circuit.cx(qreg_q[0], qreg_q[1])
+circuit.ccx(qreg_q[0], qreg_q[1], qreg_q[2])
+
+#XOR
+qreg_q = QuantumRegister(3, 'q')
+creg_c = ClassicalRegister(3, 'c')
+circuit = QuantumCircuit(qreg_q, creg_c)
+
+circuit.cx(qreg_q[1], qreg_q[2])
+circuit.cx(qreg_q[0], qreg_q[2])
+
+
+
+Directo en Twitch: https://www.twitch.tv/videos/742913354
+Directo resubido a Youtube: https://youtu.be/OnSyzPzFEJ4
