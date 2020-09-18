@@ -1,6 +1,9 @@
 Durante el tercer episodio de Quantum Lab seguimos exploramos las distintas puertas cuánticas que ofrece IBM quantum experience: RX, RY, U3, etc. 
 Además construimos las puertas clásicas AND, OR and XOR usando puertas cuánticas. Todas las implementaciones usan 3 qubits, 2 cubits sobre los que operar y uno de control.
-¿Se pueden implementar usando 2 qubits tan solo, haciendo que el segundo qubit sea el control?
+¿Se pueden implementar usando 2 qubits tan solo, haciendo que el segundo qubit sea el control? Respuesta corta: solo XOR, que corresponde a CNOT cuántica. AND y OR no dan matrices
+unitarias, por lo que no se puedne implementar con tan solo 2 qubits.
+
+Este post discute el tema: https://quantumcomputing.stackexchange.com/questions/5829/implementing-classical-and-gate-and-classical-or-gate-with-a-quantum-circuit
 
 Soluciones
 
