@@ -1,0 +1,14 @@
+Durante el cuarto episodio de Quantum Lab hemos implementado puertas CNOT en en distintos qubits del procesador Yorkshire. Dado que los qubits tienen distintas
+tasas de error, las conexiones entre qubits también, es mejor implementar determinadas puertas lógicas en determinados qubits.
+En neustro caso, los qubits 3 y 4 tenían menos tasa de error que los qubits 0 y 1. 
+Al implementar una puerta CNOT en diferente pares de qubits obtenemos los siquientes resultados:
+control    target    error
+0           1         5.16%
+3           4         0 %
+2           4         
+Recordad que las calibraciones cambian cada día, así que no necesariamente los mejores qubits para implementar CNOT durante el directo lo será al día siguiente
+
+Además instalamos el paquete de qiskit en Python.
+
+Directo Twitch:https://www.twitch.tv/videos/750124340
+Directo youtube: https://youtu.be/tDrYYr9Coo8 
