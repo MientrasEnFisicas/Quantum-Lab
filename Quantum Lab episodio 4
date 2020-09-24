@@ -5,7 +5,7 @@ Al implementar una puerta CNOT en diferente pares de qubits obtenemos los siquie
 control    target    error
 0           1         5.16%
 3           4         0 %
-2           4         
+2           4         5.94%
 Recordad que las calibraciones cambian cada día, así que no necesariamente los mejores qubits para implementar CNOT durante el directo lo será al día siguiente
 
 Además instalamos el paquete de qiskit en Python.
