@@ -1,0 +1,14 @@
+Durante el cuarto episodio de Quantum Lab nos adentramos en el algoritmo de Deutsch-Jozsa. Este algoritmo es un ejemplo de cómo un algoritmo cuántico 
+es mucho más eficiente que un algoritmo cuántico. Exploramos el formalismo matemático que hay detrás de este algoritmo y cómo observamos algunos detalles como pro ejemplo,
+si la función f(x) a evaluar es balanceado, el efecto del algorimo es convertir los estados del los qubit control que estaban inicializados a 0 a 1. Si por el contrario,
+la función es equilibrada, el estado de los qubits de control no cambia. Al final de la sesión implementamos un ejemplo práctico: 
+
+https://qiskit.org/textbook/ch-algorithms/deutsch-jozsa.html#2.-Worked-Example--
+
+Ejecutamos el algoritmo en unprocesador real, aunque tuvimos problemas para seleccionar un procesador en concreto, ya que por alguna razón no podías seleccioanr el procesador que deseásemos 
+tan solo escribiendo el nombre.
+
+
+Directo en Twitch:https://www.twitch.tv/videos/760696888
+Directo resubido en youtube: https://www.youtube.com/watch?v=7N9W7JThOLI
+
