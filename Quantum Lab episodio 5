@@ -5,7 +5,7 @@ la función es equilibrada, el estado de los qubits de control no cambia. Al fin
 
 https://qiskit.org/textbook/ch-algorithms/deutsch-jozsa.html#2.-Worked-Example--
 
-Ejecutamos el algoritmo en unprocesador real, aunque tuvimos problemas para seleccionar un procesador en concreto, ya que por alguna razón no podías seleccioanr el procesador que deseásemos 
+Ejecutamos el algoritmo en un procesador real, aunque tuvimos problemas para seleccionar un procesador en concreto, ya que por alguna razón no podías seleccioanr el procesador que deseásemos 
 tan solo escribiendo el nombre.
 
 
