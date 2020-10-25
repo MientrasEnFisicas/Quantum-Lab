@@ -6,6 +6,8 @@ se queda en superposición? (Paso 4 Qiskit textbook: https://qiskit.org/textbook
 
 Un apunte sobre la implementación del código. En este ejemplo el oráculo viene contruído ya en qiskit, incluída las medidas del los qubits objetivo
 
+Directo en Twitch: https://www.twitch.tv/videos/777502546
+Vídeo en youtube: https://youtu.be/iDSOhPnRfHk
 
 #Código
 %matplotlib inline
@@ -47,3 +49,5 @@ shots = 1024
 results = execute(simon_circuit, backend=backend, shots=shots).result()
 counts = results.get_counts()
 plot_histogram(counts)
+
+
