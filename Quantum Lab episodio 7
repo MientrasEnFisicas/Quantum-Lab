@@ -1,0 +1,64 @@
+Durante el sexto episodio de Quantum Lab exploramos el algoritmo de Bernstein–Vazirani. Este algoritmo es similar al the Deustch-Jozsa, de hehco la única diferencia es que
+el registro objetivo se inicializa al estado |0> - |1>, en vez de |0>.
+
+
+#código
+# initialization
+import matplotlib.pyplot as plt
+import numpy as np
+
+# importing Qiskit
+from qiskit import IBMQ, BasicAer
+from qiskit.providers.ibmq import least_busy
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, execute
+
+# import basic plot tools
+from qiskit.visualization import plot_histogram
+
+backend = Aer.get_backend('statevector_simulator')
+
+#Elegimos el número de qubits y la cadena secreta que queremos averiguar
+n = 2
+s = '11'
+
+#creamos el circuito
+bv_circuit = QuantumCircuit(n+1,n)
+# bv_circuit.draw()
+#Aplicamos hadammard atodos los registros
+for i in range(n):
+    bv_circuit.h(i)
+
+#ponemos el qubits control en el estado |->. Tenemos 2 opciones
+# bv_circuit.x(n)
+# bv_circuit.h(n)
+# execute(bv_circuit,backend).result().get_statevector()
+#O esta otra
+bv_circuit.h(n)
+bv_circuit.z(n)
+# execute(bv_circuit,backend).result().get_statevector()
+
+#Poanemos la barrera, para separar el oráculo de la inicialización
+bv_circuit.barrier()
+#Aplicamos el oráculo
+s = s[::-1]
+for j in range(n):
+    if s[j] == '0':
+        bv_circuit.i(j)
+    else:
+        bv_circuit.cx(j, n)
+bv_circuit.barrier()
+for i in range(n):
+    bv_circuit.h(i)
+for i in range(n):
+    bv_circuit.measure(i,i)
+    
+bv_circuit.draw() 
+print(execute(bv_circuit,backend = backend).result().get_statevector())
+
+backend2 = BasicAer.get_backend('qasm_simulator')
+shots = 1024
+results = execute(bv_circuit, backend = backend2, shots = shots).result()
+results.get_counts()
+
+Directo en Twitch: https://www.twitch.tv/videos/781344674
+Directo resubido en youtube: https://youtu.be/L8oqL5JUEHQ
