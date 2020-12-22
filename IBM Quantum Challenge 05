@@ -1,0 +1,59 @@
+Empezamos con el ejercicios 2b. Creamos las Qram, aunque nos atascamos en el contador. Es importante darse cuenta de que si hay que usar Grover varias veces,
+el qubit que realiza el pahse flip puede ser compartido. En este caso, el phase flip de Grover que da la solución y Grover que selcciona los tableros con menos de 3 pulsaciones puede ser el mismo
+
+Enlace al canal de youtube: https://youtu.be/5ycRU9IQc5c
+Enlace a Twitch: No hay
+
+#Código
+from qiskit import *
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit import IBMQ, Aer, execute
+provider = IBMQ.load_account()
+
+address=QuantumRegister(2)
+tile = QuantumRegister(9)
+flip = QuantumRegister(9)
+oracle = QuantumRegister(1)
+auxiliary = QuantumRegister(6)
+c = ClassicalRegister(2)
+N = 2
+mode = 'noancilla'
+
+qc = QuantumCircuit(address, tile, flip, oracle, auxiliary, c)
+
+def qram_exercise2(prob_array, qc, tile, addresse):
+        # address 00 -> board 0
+        qc.x(address)
+        i = 0
+        for light in prob_array[0]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.x(address)
+        qc.barrier()
+        # address 01 -> board 1
+        qc.x(address[0])
+        i = 0
+        for light in prob_array[1]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.x(address[0])
+        qc.barrier()
+        # address 10 -> board 2
+        qc.x(address[1])
+        i = 0
+        for light in prob_array[2]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.x(address[1])
+        qc.barrier()
+        # address 11 -> board 3
+        i = 0
+        for light in prob_array[3]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.barrier()
+
