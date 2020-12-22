@@ -1,0 +1,83 @@
+IBM Quantum Challenge 3, empezamos con el algoritmo de Grover
+
+Enlace al canal de youtube: https://youtu.be/utahjj5iGPs
+Enlace a Twitch: https://www.twitch.tv/videos/807723490
+
+
+#Código:
+# # Change ans of following code and check your answer.
+# # ans must be an interger.
+
+# #initialization
+# import matplotlib.pyplot as plt
+# %matplotlib inline
+# import numpy as np
+
+# # importing Qiskit
+# from qiskit import IBMQ, BasicAer
+# from qiskit.providers.ibmq import least_busy
+# from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, execute
+
+# # import basic plot tools
+# from qiskit.tools.visualization import plot_histogram
+
+# def phase_oracle(circuit, register):
+#     circuit.cz(register[0], register[1])
+
+# qr = QuantumRegister(2)
+# oracleCircuit = QuantumCircuit(qr)
+# phase_oracle(oracleCircuit, qr)
+# oracleCircuit.draw(output="mpl")
+
+# def inversion_about_average(circuit, register):
+#     """Apply inversion about the average step of Grover's algorithm."""
+#     circuit.h(register)
+#     circuit.x(register)
+#     circuit.h(register[1])
+#     circuit.cx(register[0], register[1])
+#     circuit.h(register[1])
+#     circuit.x(register)
+#     circuit.h(register)
+    
+# qAverage = QuantumCircuit(qr)
+# inversion_about_average(qAverage, qr)
+# qAverage.draw(output='mpl')
+
+# #Todo junto
+# qr = QuantumRegister(2)
+# cr = ClassicalRegister(2)
+
+# groverCircuit = QuantumCircuit(qr)
+# groverCircuit.h(qr)
+
+# phase_oracle(groverCircuit, qr)
+# inversion_about_average(groverCircuit, qr)
+
+# groverCircuit.measure(qr,cr)
+# groverCircuit.draw(output="mpl")
+
+# initialization
+import matplotlib.pyplot as plt
+import numpy as np
+
+# importing Qiskit
+from qiskit import IBMQ, BasicAer, Aer
+from qiskit.providers.ibmq import least_busy
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, execute
+from qiskit.visualization import plot_histogram
+
+circuit = QuantumCircuit(2)
+circuit.h(0)
+circuit.cx(0, 1)
+
+# # Retrieve the statevector_simulator backend
+backend = Aer.get_backend('statevector_simulator')
+# plot_histogram(answer)
+print(execute(circuit,backend = backend).result().get_statevector())
+fig1 =plt.figure()
+labels = ['00', '01', '10','11']
+plt.bar(labels,execute(circuit,backend = backend).result().get_statevector() )   
+     
+
+# from qc_grader import grade_ex1b
+# grade_ex1b(ans)
