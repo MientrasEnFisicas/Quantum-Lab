@@ -1,0 +1,57 @@
+Durante el noveno episodio de Quantum Lab seguimos explorando el algoritmo de Simon e implementamos el comprobador de soluciones
+Enlace youtube:  https://youtu.be/QF8qNFF9CNs 
+Enlace Twitcht:https://www.twitch.tv/videos/792115013
+
+#Código
+%matplotlib inline
+# Importing standard Qiskit libraries and configuring account
+from qiskit import QuantumCircuit, execute, Aer, IBMQ
+from qiskit.compiler import transpile, assemble
+from qiskit.tools.jupyter import *
+from qiskit.visualization import *
+# Loading your IBM Q account(s)
+provider = IBMQ.load_account()
+
+# import basic plot tools
+from qiskit.visualization import plot_histogram
+from qiskit_textbook.tools import simon_oracle
+
+
+
+b = '110'
+n = len(b)
+simon_circuit = QuantumCircuit(n*2, n)
+
+# for i in range(n): #Alternativa para aplicar hadammard a todos los registros
+#     simon_circuit.h(i)
+
+simon_circuit.h(range(n))   
+simon_circuit.barrier()
+simon_circuit += simon_oracle(b)
+simon_circuit.barrier()
+simon_circuit.h(range(n))  
+simon_circuit.measure(range(n),range(n))
+
+simon_circuit.draw() 
+# backend = Aer.get_backend('statevector_simulator')
+# print(execute(simon_circuit,backend = backend).result().get_statevector())
+
+# use local simulator
+backend = Aer.get_backend('qasm_simulator')
+shots = 1024
+results = execute(simon_circuit, backend=backend, shots=shots).result()
+counts = results.get_counts()
+plot_histogram(counts)
+
+#Esto vale para comprobar las soluciones
+def check_b(b, z):
+    accum = 0
+    for i in range(len(b)):
+        accum += int(b[i])*int(z[i])
+    return (accum % 2)
+ 
+z_list1 = list(counts) #para b elegida en el problema
+z_list2 = ['000', '011', '101', '110'] #para b = 111
+
+for i in range(len(z_list1)):
+    print(check_b(b, z_list1[i]))
