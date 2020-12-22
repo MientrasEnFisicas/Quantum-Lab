@@ -1,0 +1,231 @@
+No hay vídeos, pero aquí está mi implementación para el ejercicio 2b
+
+#Código
+from qiskit import *
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit import IBMQ, Aer, execute
+provider = IBMQ.load_account()
+
+def week2b_ans_func(prob_array):
+    address=QuantumRegister(2)
+    tile = QuantumRegister(9)
+    flip = QuantumRegister(9)
+    oracle = QuantumRegister(1)
+    auxiliary = QuantumRegister(6)
+    c = ClassicalRegister(2)
+    N = 2
+    mode = 'noancilla'
+    # 27 qubit
+    qc = QuantumCircuit(address, tile, flip, oracle, auxiliary, c)
+    
+    #initialize
+    def initialize():
+        qc.h(address[0:2])
+        qc.h(flip)
+        qc.x(oracle[0])
+        qc.h(oracle[0])
+    #qram_2
+    def qram_exercise2(prob_array, qc, tile, addresse):
+        # address 00 -> board 0
+        qc.x(address)
+        i = 0
+        for light in prob_array[0]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.x(address)
+        qc.barrier()
+        # address 01 -> board 1
+        qc.x(address[0])
+        i = 0
+        for light in prob_array[1]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.x(address[0])
+        qc.barrier()
+        # address 10 -> board 2
+        qc.x(address[1])
+        i = 0
+        for light in prob_array[2]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.x(address[1])
+        qc.barrier()
+        # address 11 -> board 3
+        i = 0
+        for light in prob_array[3]:
+            if light == 1:
+                qc.ccx(address[0],address[1],tile[i])
+            i = i + 1  
+        qc.barrier()
+        
+    def flip_tile(qc,flip,tile):
+        qc.cx(flip[0], tile[0])
+        qc.cx(flip[0], tile[1])
+        qc.cx(flip[0], tile[3])
+        qc.cx(flip[1], tile[0])
+        qc.cx(flip[1], tile[1])
+        qc.cx(flip[1], tile[2])
+        qc.cx(flip[1], tile[4])
+        qc.cx(flip[2], tile[1])
+        qc.cx(flip[2], tile[2])
+        qc.cx(flip[2], tile[5])
+        qc.cx(flip[3], tile[0])
+        qc.cx(flip[3], tile[3])
+        qc.cx(flip[3], tile[4])
+        qc.cx(flip[3], tile[6])
+        qc.cx(flip[4], tile[1])
+        qc.cx(flip[4], tile[3])
+        qc.cx(flip[4], tile[4])
+        qc.cx(flip[4], tile[5])
+        qc.cx(flip[4], tile[7])
+        qc.cx(flip[5], tile[2])
+        qc.cx(flip[5], tile[4])
+        qc.cx(flip[5], tile[5])
+        qc.cx(flip[5], tile[8])
+        qc.cx(flip[6], tile[3])
+        qc.cx(flip[6], tile[6])
+        qc.cx(flip[6], tile[7])
+        qc.cx(flip[7], tile[4])
+        qc.cx(flip[7], tile[6])
+        qc.cx(flip[7], tile[7])
+        qc.cx(flip[7], tile[8])
+        qc.cx(flip[8], tile[5])
+        qc.cx(flip[8], tile[7])
+        qc.cx(flip[8], tile[8])
+           
+    def lights_out_oracle2(qc,tile,oracle, mode):
+        qc.x(tile[0:9])
+        qc.mct(tile[0:9], oracle[0], mode = mode)
+        qc.x(tile[0:9])
+        
+    def counter_oracle_1push(auxiliary, mode):
+        qc.x(auxiliary[1])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[3])
+        qc.mct([auxiliary[0],auxiliary[1],auxiliary[2],auxiliary[3]], oracle[0], mode = mode)
+        qc.x(auxiliary[3])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[1]) 
+        
+    def counter_oracle_3push(auxiliary, mode):
+        #0push  
+        qc.x(auxiliary[0])
+        qc.x(auxiliary[1])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[3])
+        qc.mct([auxiliary[0],auxiliary[1],auxiliary[2],auxiliary[3]], oracle[0], mode = mode)
+        qc.x(auxiliary[3])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[1])
+        qc.x(auxiliary[0])
+        #1push
+        qc.x(auxiliary[1])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[3])
+        qc.mct([auxiliary[0],auxiliary[1],auxiliary[2],auxiliary[3]], oracle[0], mode = mode)
+        qc.x(auxiliary[3])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[1])
+        #2pushes
+        qc.x(auxiliary[0])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[3])
+        qc.mct([auxiliary[0],auxiliary[1],auxiliary[2],auxiliary[3]], oracle[0], mode = mode)
+        qc.x(auxiliary[3])
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[0])
+        #3pushes
+        qc.x(auxiliary[2])
+        qc.x(auxiliary[3])
+        qc.mct([auxiliary[0],auxiliary[1],auxiliary[2],auxiliary[3]], oracle[0], mode = mode)
+        qc.x(auxiliary[3])
+        qc.x(auxiliary[2])
+    #     #gate synthesis
+    #     qc.x(auxiliary[2])
+    #     qc.x(auxiliary[3])
+    #     qc.ccx(auxiliary[2],auxiliary[3],oracle[0])
+    #     qc.x(auxiliary[2])
+    #     qc.x(auxiliary[3])
+        
+    def flipdiffusion2(qc,flip, mode):
+        qc.h(flip)
+        qc.x(flip)
+        qc.h(flip[8])
+        qc.mct(flip[0:8], flip[8], mode = mode)
+        qc.h(flip[8])
+        qc.x(flip)
+        qc.h(flip)
+        
+    # Counter components
+    def counter(qc, flip,auxiliary):
+        for i in range(len(flip)):
+            qc.mct([flip[i],auxiliary[0],auxiliary[1],auxiliary[2]],auxiliary[3],auxiliary[4:6])
+            qc.mct([flip[i],auxiliary[0],auxiliary[1]],auxiliary[2],auxiliary[4])
+            qc.ccx(flip[i],auxiliary[0],auxiliary[1])
+            qc.cx(flip[i],auxiliary[0])
+            
+    def revcounter(qc, flip,auxiliary):
+        for i in range(len(flip)):
+            qc.cx(flip[i],auxiliary[0])
+            qc.ccx(flip[i],auxiliary[0],auxiliary[1])
+            qc.mct([flip[i],auxiliary[0],auxiliary[1]],auxiliary[2],auxiliary[4])
+            qc.mct([flip[i],auxiliary[0],auxiliary[1],auxiliary[2]],auxiliary[3],auxiliary[4:6])
+    
+    def addressdiffusion(qc,address):
+        qc.h(address)
+        qc.x(address)
+        qc.cz(address[0],address[1])
+        qc.x(address)
+        qc.h(address)
+
+    initialize()
+    qram_exercise2(prob_array, qc, tile, address)
+    #U_2A
+    for i in range(N):
+        flip_tile(qc, flip, tile)
+        lights_out_oracle2(qc,tile,oracle, mode)
+        flip_tile(qc, flip, tile)
+        flipdiffusion2(qc,flip, mode)
+    #count number of "1"s
+    counter(qc, flip,auxiliary)
+    #Inverting the phase of a legal solution (up to 3 pushes).
+    counter_oracle_3push(auxiliary, mode)
+    #Uncomputing: The phase information returns to the 3 qubits flip-information.
+    revcounter(qc, flip, auxiliary)
+    #U_d_2A
+    for i in range(N):
+        flipdiffusion2(qc,flip, mode)
+        flip_tile(qc, flip, tile)
+        lights_out_oracle2(qc,tile,oracle, mode)
+        flip_tile(qc, flip, tile)
+    #Uncomputing: The phase information returns to the QRAM address qubits.
+    qram_exercise2(prob_array, qc, tile, address)
+    #Diffusion
+    addressdiffusion(qc,address)
+    # Measurement
+    qc.measure(address,c[0:2])
+    # Reverse the output string.
+    qc = qc.reverse_bits()
+    
+    return qc
+    
+    # Submission code
+from qc_grader import prepare_ex2b, grade_ex2b, submit_ex2b
+
+# Execute your circuit with following prepare_ex2b() function.
+# The prepare_ex2b() function works like the execute() function with only QuantumCircuit as an argument.
+job  =  prepare_ex2b(week2b_ans_func)
+
+result = job.result()
+count = result.get_counts()
+original_problem_set_counts = count[0]
+
+original_problem_set_counts
+# The bit string with the highest number of observations is treated as the solution.
+
+# Check your answer by executing following code.
+# The quantum cost of the QuantumCircuit is obtained as the score. The quantum cost is related to rank only in the third week.
+grade_ex2b(job)
