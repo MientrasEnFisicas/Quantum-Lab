@@ -1,0 +1,46 @@
+IBM Quantum Challenge 6:semana 2, ejercicio 2b: creando el sumador
+
+Intentamos crear un sumador apra que sumer los 1 del vector tablero del ejercicio 2b utilizando el vído de Ket.G(https://www.youtube.com/watch?v=TL8ZI_goX04&ab_channel=Ket.G). El problema de este sumador es que por si queremos sumar
+, por ejemplo, 1010 + 1, necesitamos qubits en total porque 1 lo tenemos que representar como 0001
+
+#Código
+%matplotlib inline
+# Importing standard Qiskit libraries and configuring account
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, execute, Aer, IBMQ
+from qiskit.compiler import transpile, assemble
+from qiskit.tools.jupyter import *
+from qiskit.visualization import *
+# Loading your IBM Q account(s)
+provider = IBMQ.load_account()
+
+q_i = QuantumRegister(6)
+q_s = QuantumRegister(4)
+c = ClassicalRegister(4)
+qc = QuantumCircuit(q_i,q_s,c)
+
+def counter(qc):
+    d = int(len(q_i)/2)
+    for i in range(d):
+        qc.ccx(q_i[i],q_i[i+3],q_s[d-i])
+        qc.ccx(q_i[i],q_s[d-i-1],q_s[d-i])
+        qc.ccx(q_i[i+3],q_s[d-i-1],q_s[d-i])
+        qc.cx(q_i[i],q_s[d-i-1])
+        qc.cx(q_i[i+3],q_s[d-i-1])  
+        qc.barrier()
+    return
+
+#init
+qc.x(q_i[2])
+qc.x(q_i[5])
+counter(qc)
+    
+qc.measure(q_s,c)
+qc.draw('mpl')
+
+# #backend = provider.get_backend('ibmq_qasm_simulator')
+# backend = Aer.get_backend('qasm_simulator')
+# job = execute(qc, backend=backend, shots=8000, seed_simulator=12345, backend_options={"fusion_enable":True})
+# #job = execute(qc, backend=backend, shots=8192)
+# result = job.result()
+# count =result.get_counts()
+# print(count)
