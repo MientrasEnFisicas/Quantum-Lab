@@ -1,0 +1,46 @@
+Durante el décimo episodio de Quantum Lab acabamos con el algoritmo de Simon, e implmentamos el oráculo generalizado
+
+Directo en Twitch: https://www.twitch.tv/videos/792046717
+Vídeo en youtube: https://youtu.be/BX8iUcSPaPo
+
+#Código
+#Implementación de oráculo general de Simon
+%matplotlib inline
+# Importing standard Qiskit libraries and configuring account
+from qiskit import QuantumCircuit, execute, Aer, IBMQ
+from qiskit.compiler import transpile, assemble
+from qiskit.tools.jupyter import *
+from qiskit.visualization import *
+# Loading your IBM Q account(s)
+provider = IBMQ.load_account()
+
+# import basic plot tools
+from qiskit.visualization import plot_histogram
+
+
+b = '10010101'
+n = len(b)
+simon_circuit = QuantumCircuit(n*2, n*2)
+simon_circuit.h(range(n))   
+simon_circuit.barrier()
+# simon_orcle
+simon_circuit.cx(range(n),range(n,2*n))
+
+setOfIndices = []
+for i in range(n):
+    if (b[i] == "1"):
+        setOfIndices.append(i)
+# print(setOfIndices)
+
+if (len(setOfIndices)):
+    least_significant_index = setOfIndices[-1]
+# print(setOfIndices[-1])  
+# print(least_significant_index)  
+simon_circuit.cx(least_significant_index,range(n,2*n))
+simon_circuit.x(range(n,2*n))
+# simon_circuit.measure(range(n,2*n), range(n))
+simon_circuit.barrier()
+simon_circuit.h(range(n))
+simon_circuit.barrier()
+simon_circuit.measure(range(n), range(n))
+simon_circuit.draw() 
